@@ -267,7 +267,7 @@ def launch_dashboard():
         # a better way
         st.title("")
         # Printing the dataframe used to create the area chart
-        st.dataframe(cumple_ambos, use_container_width=True)
+        st.dataframe(cumple_ambos.sort_values(by="Fecha"), use_container_width=True)
 
         st.title("")
         st.title("")
