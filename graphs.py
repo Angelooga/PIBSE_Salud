@@ -2,7 +2,6 @@ import re
 import plotly.express as px
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-from processing import aggregate_data
 
 
 def format_graphs_titles(variables: list):
@@ -97,20 +96,22 @@ def create_time_series(data, option):
     return fig
 
 
-def create_area_chart(df, y: str, color: str, title: str):
+def create_area_chart(df, y: str, color: str, title: str, order: dict):
     """
 
     :param df:
     :param y:
     :param color:
     :param title:
+    :param order:
     :return:
     """
 
     fig = px.area(df, "Fecha", y, color=color,
                   title=title, markers=True,
-                  range_y=None)
-    fig.update_layout(height=575)
+                  range_y=None,
+                  category_orders=order)
+    fig.update_layout(height=575, yaxis_title="Número de Participantes")
 
     return fig
 
