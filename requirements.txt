@@ -1,4 +1,4 @@
 numpy
-pyplot
+plotly
 pandas
 re
