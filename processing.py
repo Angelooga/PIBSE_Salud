@@ -2,7 +2,7 @@ import pandas as pd
 import operator
 
 
-def read_data(index_col: str = None, dtype=None, date_col: list = None):
+def read_data(index_col: str = None, dtype=None):
     """
     This function reads a csv file and returns a pandas dataframe.
     :param index_col: Name of the column that will serve as the dataframe index
@@ -12,9 +12,8 @@ def read_data(index_col: str = None, dtype=None, date_col: list = None):
     """
     path = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
-    df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=date_col)
-    if date_col is not None:
-        df[date_col[0]] = df[date_col[0]].dt.date
+    df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=["Fecha"])
+    df["Fecha"] = df["Fecha"].dt.date
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df = df[df["Entidad"].isin(states_to_keep)]
