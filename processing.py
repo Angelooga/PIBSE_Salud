@@ -10,7 +10,7 @@ def read_data(index_col: str = None, dtype=None, date_col: list = None):
     :param date_col: Name of the date column
     :return: A pandas dataframe containing the data
     """
-    path = r"G:\Mi unidad\PIBSE_salud\PIBSE 2024 Histórico (6 semanas).csv"
+    path = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
     df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=date_col)
     if date_col is not None:
