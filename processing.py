@@ -2,24 +2,26 @@ import pandas as pd
 import operator
 
 
-def read_data(index_col: str = None, dtype=None):
+def read_data(index_col: str = None, dtype=None, date_col: list = None):
     """
     This function reads a csv file and returns a pandas dataframe.
     :param index_col: Name of the column that will serve as the dataframe index
     :param dtype: Datatype or dictionary of datatypes in the dataframe.
+    :param date_col: Name of the date column
     :return: A pandas dataframe containing the data
     """
-    path = r"PIBSE 2024 Histórico (6 semanas).csv"
+    path = r"G:\Mi unidad\PIBSE_salud\PIBSE 2024 Histórico (6 semanas) - Histórico (6 fechas).csv"
     # Reading the csv file
-    df = pd.read_csv(path, index_col=index_col, dtype=dtype, 
-                     parse_dates=["Fecha"])
+    df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=date_col)
+    if date_col is not None:
+        df[date_col[0]] = df[date_col[0]].dt.date
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df = df[df["Entidad"].isin(states_to_keep)]
     # Deleting the redundancies from the Sexo column
     df["Sexo"] = df["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     # Deleting "unnecessary" columns.
-    cols_to_delete = ["Puesto", "total_encuestas"]
+    cols_to_delete = ["Centro de trabajo", "Puesto", "Email", "Jurisdicción", "total_encuestas"]
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
     return df[cols_to_keep]
@@ -91,6 +93,23 @@ def meets_requirements(df, filter_vars: dict):
     df["Cumple_Asistencias"] = df["Cumple_Asistencias"].apply(lambda x: "Sí" if x == 1 else "No")
 
     return df
+
+# def count_uniques(df, variables: list):
+#     """
+#     This function counts the occurrence of unique values in a dataframe column, and orders the result un descending
+#     order.
+#     :param df: Dataframe from which the data will be collected.
+#     :param variables: Dataframe columns to count the values from.
+#     :return: A dataframe with the count of the unique values from the selected column.
+#     """
+#     # Filtering variables
+#
+#     filtered_variables = [v for v in variables if v != ""]
+#
+#     aggregated_df = df.groupby(by=filtered_variables)[[filtered_variables[0]]].aggregate("count")
+#     sorted_df = aggregated_df.rename(columns={f"{filtered_variables[0]}": "Conteo"})
+#
+#     return sorted_df.reset_index()
 
 
 def delete_redundancies(x, column: str):
