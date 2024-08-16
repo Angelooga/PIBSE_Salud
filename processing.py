@@ -21,7 +21,7 @@ def read_data(index_col: str = None, dtype=None, date_col: list = None):
     # Deleting the redundancies from the Sexo column
     df["Sexo"] = df["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     # Deleting "unnecessary" columns.
-    cols_to_delete = ["Puesto", "total_encuestas"]
+    cols_to_delete = ["Centro de trabajo", "Puesto", "Email", "Jurisdicción", "total_encuestas"]
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
     return df[cols_to_keep]
