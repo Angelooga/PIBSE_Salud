@@ -164,23 +164,6 @@ def set_sidebar(df):
                     # Appending the value of the corresponding filter
                     filter_vars[q_filter]["value"] = value
 
-# ----------------------------------------------------------------------------------------------------------------------
-        # This block took care of the selection of requirements we may use it later
-        # st.write("Seleccione requerimiento a visualizar:")
-        # parameter = st.radio(label="Seleccione requerimiento a visualizar",
-        #                      options=["Minutos", "Asistencias"],
-        #                      index=0, label_visibility="collapsed")
-
-        # if parameter == "Minutos":
-        #     filter_vars["Minutos_min"]["flag"] = True
-        #     filter_vars["Asistencias_min"]["flag"] = False
-        # else:
-        #     filter_vars["Minutos_min"]["flag"] = False
-        #     filter_vars["Asistencias_min"]["flag"] = True
-
-        # filter_vars["parameter"]["name"] = filter_vars[parameter]["name"]
-        # filter_vars["parameter"]["key"] = parameter
-# ----------------------------------------------------------------------------------------------------------------------
         st.write("Requerimientos Mínimos")
         # Creating two columns for the minimum requirements
         col1, col2 = st.columns([1/2, 1/2])
@@ -221,34 +204,16 @@ def launch_dashboard():
     filtered_df = filter_data(df, selections)
     # Creating requirement variables
     requirements_df = meets_requirements(filtered_df, selections)
-    # requirements_df.to_csv("requirements.csv")
-    # Aggregating the resultant data to create the plots
-    # aggregated_data = aggregate_data(requirements_df, ["Fecha", f"Cumple_Ambos"],
-    #                                  "Cumple_Ambos",
-    #                                  operation="count")
+    
     cumple_ambos = count_values(requirements_df, "Fecha", "Cumple_Ambos")
     cumple_minutos = count_values(requirements_df, "Fecha", "Cumple_Minutos")
     cumple_asistencias = count_values(requirements_df, "Fecha", "Cumple_Asistencias")
 
-    # Dividing the layout in two columns
+    # Dividing the layout into two columns
     col1, col2 = st.columns([2/3, 1/3])
     with col1:
         title = ""
-# ----------------------------------------------------------------------------------------------------------------------
-        # title_asistencias = ""
-        # title_minutos = ""
-        # if selections["Minutos"]["flag"]:
-        #     title_minutos = ", minutos " + selections["Minutos"]["operation"] \
-        #                         + " " + str(selections["Minutos"]["value"])
-        # if selections["Asistencias"]["flag"]:
-        #     title_asistencias = ", asistencias " + selections["Asistencias"]["operation"] \
-        #                         + " " + str(selections["Asistencias"]["value"])
-        # if selections["Entidad"]["flag"]:
-        #     selected_ent = selections["Entidad"]["value"]
-        #     title = f"Gráfica de área en {selected_ent}" + title_asistencias + title_minutos
-        # else:
-        #     title = "Gráfica de área general" + title_asistencias + title_minutos
-# ----------------------------------------------------------------------------------------------------------------------
+        
         # Creating area chart
         st.plotly_chart(create_area_chart(cumple_ambos,
                                           "Conteo", "Cumple_Ambos", title))
