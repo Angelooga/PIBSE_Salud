@@ -1,4 +1,5 @@
 import re
+import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
@@ -110,9 +111,7 @@ def create_area_chart(df, y: str, color: str, title: str):
     fig = px.area(df, "Fecha", y, color=color,
                   title=title, markers=True,
                   range_y=None)
-    fig.update_layout(height=575, yaxis_title="Número de Participantes",
-                      xaxis_title="Fecha")
-
+    fig.update_layout(height=575)
 
     return fig
 

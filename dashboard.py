@@ -1,6 +1,7 @@
 import streamlit as st
-from graphs import create_area_chart
-from processing import count_values, read_data, filter_data, meets_requirements
+from st_aggrid import AgGrid
+from graphs import create_time_series, create_area_chart
+from processing import aggregate_data, read_data, filter_data, meets_requirements
 
 
 def set_title(title: str = "Default"):
@@ -15,20 +16,20 @@ def set_title(title: str = "Default"):
     st.markdown(html_title, unsafe_allow_html=True)
 
 
-def set_dd_menu(options: list, title: str = "Seleccione una opción", index: int = None,
+def set_dd_menu(options: list, header: str = "Seleccione una opción", index: int = None,
                 placeholder: str = "Seleccione una opción", visibility: str = "visible"):
     """
     This function handles the creation of dropdown menus using the streamlit class "selectbox()".
     :param options: List of the elements to show in the dropdown menu.
-    :param title: Header of the dropdown menu.
+    :param header: Header of the dropdown menu.
     :param index: Index of the element to show by default. Defaults to None.
     :param placeholder: Text of the dropdown menu when no option is selected.
-    :param visibility: Boolean to specify if the title is to be seen or not.
+    :param visibility:
     :return: variable chosen from the dropdown menu.
     """
-    # Calling the selectbox method
+
     var = st.selectbox(
-        label=title,
+        label=header,
         options=options,
         index=index,
         placeholder=placeholder,
@@ -40,14 +41,11 @@ def set_dd_menu(options: list, title: str = "Seleccione una opción", index: int
 
 def set_filter_variables():
     """
-    This function takes care of the available filters to apply. Three columns, with one checkbox each, are created
-    A dictionary is also defined, it stores the available variables, their values and their comparison operation, as
-    well as a flag to tell whether the filter corresponding to that variable is active.
-    :return: Dictionary containing the variables used to filter and information about their status.
+
+    :return:
     """
-    # Calling the columns method to retrieve three columns
     col1, col2, col3 = st.columns([1/3, 1/3, 1/3])
-    # Setting a checkbox on each column
+
     with col1:
         entidad = st.checkbox(label="Entidad")
     with col2:
@@ -74,6 +72,14 @@ def set_filter_variables():
             "flag": entidad,
             "operation": "="
         },
+        "operations": {
+            "=": "eq",
+            "<=": "le",
+            "<": "lt",
+            ">=": "ge",
+            ">": "gt",
+            "!=": "ne"
+        },
         "Minutos_min": {
             "name": "minutos_app",
             "value": 0,
@@ -89,14 +95,6 @@ def set_filter_variables():
         "parameter": {
             "Key": "Minutos",
             "name": "minutos_app"
-        },
-        "operations": {
-            "=": "eq",
-            "<=": "le",
-            "<": "lt",
-            ">=": "ge",
-            ">": "gt",
-            "!=": "ne"
         }
     }
 
@@ -105,12 +103,14 @@ def set_filter_variables():
 
 def set_sidebar(df):
     """
-    This function takes charge of the sidebar configurations. It contains the checkboxes corresponding to the
-    available filters, as well as drop down menus and input boxes to set the values and operations to filter by.
-    :param df: Dataframe whose data will be used to feed the dropdown menus.
-    :return: A dictionary containing updated information about the variables used to apply the filters.
+    This function takes charge of the sidebar configurations. For the dropdown menus, it takes the columns as the
+    options in said menus.
+    :param df:
+    :return: Variables chosen in the dropdown menus.
     """
-    # This command manipulates the width of the sidebar
+
+    # selected_options = {}
+
     st.markdown(
         """
         <style>
@@ -123,37 +123,26 @@ def set_sidebar(df):
     )
 
     with st.sidebar:
-        # Variables available to filter by
-        variables = ["Entidad", "Minutos", "Asistencias"]
-        # Available comparison operators
-        operations = ["=", "<=", "<", ">=", ">", "!="]
 
-        # Setting the header of the filters section in the sidebar
+        variables = ["Entidad", "Minutos", "Asistencias"]
+        operations = ["=", "<=", "<", ">=", ">", "!="]
         st.write("Filtros generales:")
-        # Obtaining the filter variables.
         filter_vars = set_filter_variables()
 
-        # If the flag of the filter variable is set to true, activate the respective filter field
         if filter_vars["Entidad"]["flag"]:
             value = set_dd_menu(df["Entidad"].unique(),
                                 "Seleccione la entidad que desea ver:",
                                 index=0)
-            # Appending the value of the Entidad filter
             filter_vars["Entidad"]["value"] = value
-
         if filter_vars["Minutos"]["flag"] or filter_vars["Asistencias"]["flag"]:
-            # This list stores the variables whose flag is set to True
             quantitative_filters = [v for v in variables[1:] if filter_vars[v]["flag"]]
             col1, col2 = st.columns([0.5, 0.5])
-            # Activating the corresponding filter field
+
             for q_filter in quantitative_filters:
-                # The first column deploys a dropdown menu to select the comparison operator
                 with col1:
                     operation = set_dd_menu(operations,
-                                            title=f"Filtrar por {q_filter}:", index=4)
-                    # Storing the comparison operator
+                                            header=f"Filtrar por {q_filter}:", index=4)
                     filter_vars[q_filter]["operation"] = operation
-                # The second column deploys an input box to enter the filter value
                 with col2:
                     try:
                         value = int(st.text_input(label="Escriba", value=0,
@@ -161,21 +150,33 @@ def set_sidebar(df):
                                                   key=q_filter))
                     except ValueError:
                         value = 0
-                    # Appending the value of the corresponding filter
+
                     filter_vars[q_filter]["value"] = value
 
+        st.write("Seleccione requerimiento a visualizar:")
+        # parameter = st.radio(label="Seleccione requerimiento a visualizar",
+        #                      options=["Minutos", "Asistencias"],
+        #                      index=0, label_visibility="collapsed")
+
+        # if parameter == "Minutos":
+        #     filter_vars["Minutos_min"]["flag"] = True
+        #     filter_vars["Asistencias_min"]["flag"] = False
+        # else:
+        #     filter_vars["Minutos_min"]["flag"] = False
+        #     filter_vars["Asistencias_min"]["flag"] = True
+
+        # filter_vars["parameter"]["name"] = filter_vars[parameter]["name"]
+        # filter_vars["parameter"]["key"] = parameter
+
         st.write("Requerimientos Mínimos")
-        # Creating two columns for the minimum requirements
+
         col1, col2 = st.columns([1/2, 1/2])
 
         for var in variables[1:]:
-            # The first column deploys a dropdown menu to select the comparison operator
             with col1:
                 operation = set_dd_menu([">", ">="],
-                                        title=f"{var}:", index=0)
-                # Appending the operation of the corresponding filter
+                                        header=f"{var}:", index=0)
                 filter_vars[var + "_min"]["operation"] = operation
-            # The second column deploys an input box to enter the filter value
             with col2:
                 try:
                     value = int(st.text_input(label="Escriba", value=0,
@@ -183,7 +184,7 @@ def set_sidebar(df):
                                               key=var + "_min"))
                 except ValueError:
                     value = 0
-                # Appending the operation of the corresponding filter
+
                 filter_vars[var + "_min"]["value"] = value
 
     return filter_vars
@@ -196,45 +197,63 @@ def launch_dashboard():
     """
     st.set_page_config(layout="wide")
     set_title("PIBSE Salud")
-    # Reading the data
-    df = read_data()
-    # Retrieving the selections chosen from the sidebar
-    selections = set_sidebar(df)
-    # Filtering the data if necessary
-    filtered_df = filter_data(df, selections)
-    # Creating requirement variables
-    requirements_df = meets_requirements(filtered_df, selections)
-    
-    cumple_ambos = count_values(requirements_df, "Fecha", "Cumple_Ambos")
-    cumple_minutos = count_values(requirements_df, "Fecha", "Cumple_Minutos")
-    cumple_asistencias = count_values(requirements_df, "Fecha", "Cumple_Asistencias")
 
-    # Dividing the layout into two columns
+    df = read_data()
+
+    selections = set_sidebar(df)
+
+    filtered_df = filter_data(df, selections)
+    requirements_df = meets_requirements(filtered_df, selections)
+
+    # chosen_parameter = selections["parameter"]["key"]
+    # st.write(chosen_parameter)
+    aggregated_data = aggregate_data(requirements_df, ["Fecha", f"Cumple_Ambos"],
+                                     "Cumple_Ambos",
+                                     operation="count")
+
+    # st.write(aggregated_data)
+    # st.plotly_chart(create_time_series(aggregated_data, selections["parameter"]))
     col1, col2 = st.columns([2/3, 1/3])
     with col1:
-        title = ""
-        
-        # Creating area chart
-        st.plotly_chart(create_area_chart(cumple_ambos,
-                                          "Conteo", "Cumple_Ambos", title))
+        title_asistencias = ""
+        title_minutos = ""
+        if selections["Minutos"]["flag"]:
+            title_minutos = ", minutos " + selections["Minutos"]["operation"] \
+                                + " " + str(selections["Minutos"]["value"])
+        if selections["Asistencias"]["flag"]:
+            title_asistencias = ", asistencias " + selections["Asistencias"]["operation"] \
+                                + " " + str(selections["Asistencias"]["value"])
+        if selections["Entidad"]["flag"]:
+            selected_ent = selections["Entidad"]["value"]
+            title = f"Gráfica de área en {selected_ent}" + title_asistencias + title_minutos
+        else:
+            title = "Gráfica de área general" + title_asistencias + title_minutos
 
-        st.plotly_chart(create_area_chart(cumple_minutos,
-                                          "Conteo", "Cumple_Minutos", title))
-
-        st.plotly_chart(create_area_chart(cumple_asistencias,
-                                          "Conteo", "Cumple_Asistencias", title))
+        st.plotly_chart(create_area_chart(aggregated_data, "Conteo", "Cumple_Ambos", title))
     with col2:
-        # This empty st.title helps to move the dataframe where I want. I don't know any form of doing this in
-        # a better way
         st.title("")
-        # Printing the dataframe used to create the area chart
-        st.dataframe(cumple_ambos, use_container_width=True)
+        st.write("")
+        st.dataframe(aggregated_data, use_container_width=True)
+    #
+    # # st.plotly_chart(create_barchart(df, chosen_vars))
+    # if options["graph_type"] == "Gráfica de Dona":
+    #     st.pyplot(create_piechart(df, options["variables"]), clear_figure=True)
+    # elif options["graph_type"] == "Gráfica de Barras":
+    #     st.pyplot(create_barchart(df, options["variables"]), clear_figure=True)
 
-        st.title("")
-        st.title("")
-        st.dataframe(cumple_minutos, use_container_width=True)
+# Hacer otra gráfica de los que cumplen con las asistencias y los minutos.
+# Cambiar orden de las áreas.
+# Hacer el ejecutable.
+# Cambiar el  label del eje y por Número de participantes que cumplen con los requisitos.
+# 
 
-        st.title("")
-        st.title("")
-        st.dataframe(cumple_asistencias, use_container_width=True)
 
+# Hacer otro similar para EPB. Tomar cualquiera de las bases. En este caso son más rubros
+# Se tienen asistencias, no minutos_app, modulos en línea y 4 parámetros:
+	Assitenicias (Hay trips y talleres introductorios, en cuanto a asistencias, son diferentes
+			por ejemplo 4 en introductorio y 6 en trips.)
+	Encuestas
+	Trabajos
+	Promedio de 3 módulos
+	75% en cada módulo
+	Ver aquí en los menus que se seleccione o por promedio o por módulos 
