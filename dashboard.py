@@ -1,5 +1,4 @@
 import streamlit as st
-from st_aggrid import AgGrid
 from graphs import create_time_series, create_area_chart
 from processing import aggregate_data, read_data, filter_data, meets_requirements
 
