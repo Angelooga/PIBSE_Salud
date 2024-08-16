@@ -109,9 +109,10 @@ def create_area_chart(df, y: str, color: str, title: str):
 
     fig = px.area(df, "Fecha", y, color=color,
                   title=title, markers=True,
-                  range_y=None,
-                  labels={"y": "Número de Participantes"})
-    fig.update_layout(height=575)
+                  range_y=None)
+    fig.update_layout(height=575, yaxis_title="Número de Participantes",
+                      xaxis_title="Fecha")
+
 
     return fig
 
