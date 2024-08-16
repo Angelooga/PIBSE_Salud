@@ -9,7 +9,7 @@ def read_data(index_col: str = None, dtype=None):
     :param dtype: Datatype or dictionary of datatypes in the dataframe.
     :return: A pandas dataframe containing the data
     """
-    path = r"PIBSE 2024 Histórico (6 semanas) - Histórico (6 fechas).csv"
+    path = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
     df = pd.read_csv(path, index_col=index_col, dtype=dtype)
     # Keeping the top six states with the highest number of participants
@@ -90,23 +90,6 @@ def meets_requirements(df, filter_vars: dict):
     df["Cumple_Asistencias"] = df["Cumple_Asistencias"].apply(lambda x: "Sí" if x == 1 else "No")
 
     return df
-
-# def count_uniques(df, variables: list):
-#     """
-#     This function counts the occurrence of unique values in a dataframe column, and orders the result un descending
-#     order.
-#     :param df: Dataframe from which the data will be collected.
-#     :param variables: Dataframe columns to count the values from.
-#     :return: A dataframe with the count of the unique values from the selected column.
-#     """
-#     # Filtering variables
-#
-#     filtered_variables = [v for v in variables if v != ""]
-#
-#     aggregated_df = df.groupby(by=filtered_variables)[[filtered_variables[0]]].aggregate("count")
-#     sorted_df = aggregated_df.rename(columns={f"{filtered_variables[0]}": "Conteo"})
-#
-#     return sorted_df.reset_index()
 
 
 def delete_redundancies(x, column: str):
