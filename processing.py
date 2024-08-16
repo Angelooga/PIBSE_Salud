@@ -22,7 +22,7 @@ def read_data(index_col: str = None, dtype=None):
     cols_to_delete = ["Puesto", "total_encuestas"]
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
-    return df[cols_to_keep].sort_values(by="Fecha")
+    return df[cols_to_keep]
 
 
 def filter_data(df, filter_vars: dict):
