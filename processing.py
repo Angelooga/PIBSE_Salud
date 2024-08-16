@@ -12,7 +12,7 @@ def read_data(index_col: str = None, dtype=None):
     """
     path = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
-    df = pd.read_csv(path, index_col=index_col, dtype=dtype)
+    df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=["Fecha"])
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df = df[df["Entidad"].isin(states_to_keep)]
@@ -22,7 +22,7 @@ def read_data(index_col: str = None, dtype=None):
     cols_to_delete = ["Puesto", "total_encuestas"]
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
-    return df[cols_to_keep]
+    return df[cols_to_keep].sort_values(by="Fecha")
 
 
 def filter_data(df, filter_vars: dict):
