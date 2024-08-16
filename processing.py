@@ -9,7 +9,7 @@ def read_data(index_col: str = None, dtype=None):
     :param dtype: Datatype or dictionary of datatypes in the dataframe.
     :return: A pandas dataframe containing the data
     """
-    path = r"G:\Mi unidad\PIBSE_salud\PIBSE 2024 Histórico (6 semanas) - Histórico (6 fechas).csv"
+    path = r"PIBSE 2024 Histórico (6 semanas) - Histórico (6 fechas).csv"
     # Reading the csv file
     df = pd.read_csv(path, index_col=index_col, dtype=dtype)
     # Keeping the top six states with the highest number of participants
