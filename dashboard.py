@@ -214,7 +214,7 @@ def launch_dashboard():
     st.set_page_config(layout="wide")
     set_title("PIBSE Salud")
     # Reading the data
-    df = read_data(date_col=["Fecha"])
+    df = read_data()
     # Retrieving the selections chosen from the sidebar
     selections = set_sidebar(df)
     # Filtering the data if necessary
