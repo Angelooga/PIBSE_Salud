@@ -10,7 +10,7 @@ def read_data(index_col: str = None, dtype=None):
     :param date_col: Name of the date column
     :return: A pandas dataframe containing the data
     """
-    path = r"PIBSE 2024 Histórico (6 semanas).csv"
+    path = r"PIBSE 2024 Histórico (6 semanas) - Histórico (6 fechas).csv"
     # Reading the csv file
     df = pd.read_csv(path, index_col=index_col, dtype=dtype)
     df["Fecha"] = pd.to_datetime(df["Fecha"])
