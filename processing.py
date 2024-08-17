@@ -13,7 +13,7 @@ def read_data(index_col: str = None, dtype=None):
     path = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
     df = pd.read_csv(path, index_col=index_col, dtype=dtype, parse_dates=["Fecha"])
-    df["Fecha"] = pd.to_datetime(df["Fecha"], format='%Y/%m/%d')
+    df["Fecha"] = pd.to_datetime(df["Fecha"], format='%Y-%m-%d')
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df = df[df["Entidad"].isin(states_to_keep)]
