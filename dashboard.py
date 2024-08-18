@@ -252,16 +252,13 @@ def launch_dashboard():
         # Creating area chart
 
         st.plotly_chart(create_area_chart(cumple_ambos,
-                                          "Conteo", "Cumple_Ambos", title,
-                                          {"Cumple_Ambos": ["Sí", "No"]}))
+                                          "Conteo", "Cumple_Ambos", title))
 
         st.plotly_chart(create_area_chart(cumple_minutos,
-                                          "Conteo", "Cumple_Minutos", title,
-                                          {"Cumple_Minutos": ["Sí", "No"]}))
+                                          "Conteo", "Cumple_Minutos", title))
 
         st.plotly_chart(create_area_chart(cumple_asistencias,
-                                          "Conteo", "Cumple_Asistencias", title,
-                                          {"Cumple_Asistencias": ["Sí", "No"]}))
+                                          "Conteo", "Cumple_Asistencias", title))
     with col2:
         # This empty st.title helps to move the dataframe where I want. I don't know any form of doing this in
         # a better way
