@@ -164,23 +164,6 @@ def set_sidebar(df):
                     # Appending the value of the corresponding filter
                     filter_vars[q_filter]["value"] = value
 
-# ----------------------------------------------------------------------------------------------------------------------
-        # This block took care of the selection of requirements we may use it later
-        # st.write("Seleccione requerimiento a visualizar:")
-        # parameter = st.radio(label="Seleccione requerimiento a visualizar",
-        #                      options=["Minutos", "Asistencias"],
-        #                      index=0, label_visibility="collapsed")
-
-        # if parameter == "Minutos":
-        #     filter_vars["Minutos_min"]["flag"] = True
-        #     filter_vars["Asistencias_min"]["flag"] = False
-        # else:
-        #     filter_vars["Minutos_min"]["flag"] = False
-        #     filter_vars["Asistencias_min"]["flag"] = True
-
-        # filter_vars["parameter"]["name"] = filter_vars[parameter]["name"]
-        # filter_vars["parameter"]["key"] = parameter
-# ----------------------------------------------------------------------------------------------------------------------
         st.write("Requerimientos Mínimos")
         # Creating two columns for the minimum requirements
         col1, col2 = st.columns([1/2, 1/2])
@@ -221,37 +204,37 @@ def launch_dashboard():
     filtered_df = filter_data(df, selections)
     # Creating requirement variables
     requirements_df = meets_requirements(filtered_df, selections)
-    # requirements_df.to_csv("requirements.csv")
-    # Aggregating the resultant data to create the plots
-    # aggregated_data = aggregate_data(requirements_df, ["Fecha", f"Cumple_Ambos"],
-    #                                  "Cumple_Ambos",
-    #                                  operation="count")
+    
+    # Defining the dataframes that include the requirements counting
     cumple_ambos = count_values(requirements_df, "Fecha", "Cumple_Ambos")
     cumple_minutos = count_values(requirements_df, "Fecha", "Cumple_Minutos")
     cumple_asistencias = count_values(requirements_df, "Fecha", "Cumple_Asistencias")
 
+    # This dictionary stores the dataframes created
     dataframes = {
         "Cumple_Ambos": cumple_ambos,
         "Cumple_Minutos": cumple_minutos,
         "Cumple_Asistencias": cumple_asistencias
     }
 
-    # Dividing the layout in two columns
-    # col1, col2 = st.columns([2/3, 1/3])
-
+    # Creating a grid where the charts and tables will be included
+    # Defining the number or columns and rows in the grid
     nrows = 3
     ncols = 2
     rows = {}
 
+    # Inserting the charts and tables using a for loop
     for i in range(nrows):
         key = list(dataframes.keys())[i]
         rows[f"{i}"] = st.columns([2/3, 1/3])
         for j in range(ncols):
+            # If j index is equal to 0, insert a craph
             if j == 0:
                 tile = rows[f"{i}"][j].container()
                 tile.plotly_chart(create_area_chart(dataframes[key],
                                                     "Conteo", key,
                                                     "Número de participantes"))
+            # If the j index is equal to 1, write a table
             else:
                 tile = rows[f"{i}"][j].container()
                 tile.title("")
