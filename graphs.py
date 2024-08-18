@@ -20,22 +20,39 @@ def format_graphs_titles(variables: list):
     return re.sub(r"y(?=\s+i)", "e", joined_vars)
 
 
-def create_area_chart(df, y: str, color: str, title: str, order: dict):
+def create_area_chart(df, y: str, color: str, title: str):
     """
 
     :param df:
     :param y:
     :param color:
     :param title:
-    :param order:
     :return:
     """
 
-    fig = px.area(df, "Fecha", y, color=color,
-                  title=title, markers=True,
-                  range_y=None,
-                  category_orders=order)
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    no_area = px.area(df[df[color] == "No"], "Fecha", y, color=color,
+                      title=title, markers=True,
+                      range_y=None, groupnorm='fraction')
+
+    si_area = px.area(df[df[color] == "Sí"], "Fecha", y, color=color,
+                      title=title, markers=True,
+                      range_y=None, groupnorm='fraction')
+
+    if si_area.data:
+        si_area.data[0]["line"]["color"] = "#6EE1FF"
+        fig.add_trace(si_area.data[0],
+                      secondary_y=False)
+    # adata = area.data
+    if no_area.data:
+        no_area.data[0]["line"]["color"] = "#FF7373"
+        fig.add_trace(no_area.data[0],
+                      secondary_y=False)
+
     fig.update_layout(height=575, yaxis_title="Número de Participantes")
+
+    fig.update_layout(yaxis_tickformat='.0%')
 
     return fig
 
