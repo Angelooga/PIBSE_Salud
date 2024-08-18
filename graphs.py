@@ -6,12 +6,9 @@ from plotly.subplots import make_subplots
 
 def format_graphs_titles(key: str):
     """
-    This function gets a list of strings corresponding to the variables names and returns a string, in lower case, that
-    enumerates them. For example, if the list is ["Plátano", "Uva",  "Queso"], the function will return the string
-    "plátano, uva y queso", or, if the list is ["Plátano", "Uva", "Invierno"], the function will return the string
-    "plátano, uva e invierno".
-    :param variables: List containing the list of the variables.
-    :return: String that enumerates the variables.
+    This function a string to the default title depending on the key chosen to make the plot
+    :param key: Key chosen to make the plot.
+    :return: String to attach to the default title.
     """
 
     str_to_attach = ""
@@ -27,34 +24,34 @@ def format_graphs_titles(key: str):
 
 def create_area_chart(df, y: str, color: str, title: str):
     """
-
-    :param df:
-    :param y:
-    :param color:
-    :param title:
-    :return:
+    This function creates an area chart using plotly.
+    :param df: Dataframe from which the data will be taken.
+    :param y: Dataframe measured in the y-axis.
+    :param color: Dataframe column used to segregate by color.
+    :param title: Title of the chart.
+    :return: Plotly figure.
     """
-
+    # Defining a subplots instance
     fig = make_subplots()
-
+    # Creating a figure corresponding to the No values.
     no_area = px.area(df[df[color] == "No"], "Fecha", y, color=color,
                       title=title, markers=True, groupnorm='fraction')
-
+    # Creating a figure corresponding to the Sí values.
     si_area = px.area(df[df[color] == "Sí"], "Fecha", y, color=color,
                       title=title, markers=True, groupnorm='fraction')
-
+    # If the Sí area chart is not empty, add it to the subplots figure
     if si_area.data:
         si_area.data[0]["line"]["color"] = "#6EE1FF"
         fig.add_trace(si_area.data[0],
                       secondary_y=False)
-    # adata = area.data
+    # If the No area chart is not empty, add it to the subplots figure
     if no_area.data:
         no_area.data[0]["line"]["color"] = "#FF7373"
         fig.add_trace(no_area.data[0],
                       secondary_y=False)
-
-    fig.update_layout(height=575, yaxis_title="Número de Participantes", title=title + format_graphs_titles(color))
-    fig.update_layout(yaxis_tickformat='.0%')
+    # Updating the figure layout with the desired parameters
+    fig.update_layout(height=575, yaxis_title="Número de Participantes", title=title + format_graphs_titles(color),
+                      yaxis_tickformat='.0%')
 
     return fig
 
