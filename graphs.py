@@ -30,15 +30,13 @@ def create_area_chart(df, y: str, color: str, title: str):
     :return:
     """
 
-    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig = make_subplots()
 
     no_area = px.area(df[df[color] == "No"], "Fecha", y, color=color,
-                      title=title, markers=True,
-                      range_y=None, groupnorm='fraction')
+                      title=title, markers=True, groupnorm='fraction')
 
     si_area = px.area(df[df[color] == "Sí"], "Fecha", y, color=color,
-                      title=title, markers=True,
-                      range_y=None, groupnorm='fraction')
+                      title=title, markers=True, groupnorm='fraction')
 
     if si_area.data:
         si_area.data[0]["line"]["color"] = "#6EE1FF"
@@ -51,7 +49,6 @@ def create_area_chart(df, y: str, color: str, title: str):
                       secondary_y=False)
 
     fig.update_layout(height=575, yaxis_title="Número de Participantes")
-
     fig.update_layout(yaxis_tickformat='.0%')
 
     return fig
