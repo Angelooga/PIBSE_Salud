@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
 
-def format_graphs_titles(variables: list):
+def format_graphs_titles(key: str):
     """
     This function gets a list of strings corresponding to the variables names and returns a string, in lower case, that
     enumerates them. For example, if the list is ["Plátano", "Uva",  "Queso"], the function will return the string
@@ -13,11 +13,16 @@ def format_graphs_titles(variables: list):
     :param variables: List containing the list of the variables.
     :return: String that enumerates the variables.
     """
-    new_variables = [v for v in variables if v != ""]
 
-    joined_vars = re.sub(r",([^,]*)$", r" y\1", ", ".join(new_variables).lower())
+    str_to_attach = ""
 
-    return re.sub(r"y(?=\s+i)", "e", joined_vars)
+    if key == "Cumple_Ambos":
+        str_to_attach = " que cumplen ambos requerimientos"
+    else:
+        requirement = key.strip("Cumple_").lower()
+        str_to_attach = f" que cumplen los requerimientos de {requirement}"
+        
+    return str_to_attach
 
 
 def create_area_chart(df, y: str, color: str, title: str):
@@ -48,7 +53,7 @@ def create_area_chart(df, y: str, color: str, title: str):
         fig.add_trace(no_area.data[0],
                       secondary_y=False)
 
-    fig.update_layout(height=575, yaxis_title="Número de Participantes")
+    fig.update_layout(height=575, yaxis_title="Número de Participantes", title=title + format_graphs_titles(color))
     fig.update_layout(yaxis_tickformat='.0%')
 
     return fig
