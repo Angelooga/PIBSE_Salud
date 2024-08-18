@@ -7,7 +7,6 @@ def read_data(index_col: str = None, dtype=None):
     This function reads a csv file and returns a pandas dataframe.
     :param index_col: Name of the column that will serve as the dataframe index
     :param dtype: Datatype or dictionary of datatypes in the dataframe.
-    :param date_col: Name of the date column
     :return: A pandas dataframe containing the data
     """
     path = r"PIBSE 2024 Histórico (6 semanas).csv"
@@ -47,7 +46,7 @@ def filter_data(df, filter_vars: dict):
     }
     # Making a copy of the dataframe
     new_df = df
-    # This loops iterates over the available filters to check which filter has to be applied
+    # This loop iterates over the available filters to check which filter has to be applied
     for f in available_filters:
         # If the flag of the available filter is set to true, apply the filter.
         if filter_vars[f]["flag"]:
@@ -64,11 +63,14 @@ def filter_data(df, filter_vars: dict):
 
 def meets_requirements(df, filter_vars: dict):
     """
-
-    :param df:
-    :param filter_vars:
-    :return:
+    This function creates a new column in a dataframe that contains "Sí" or "No"
+    depending on a previously defined requirement.
+    :param df: Dataframe in which the new variable will be created.
+    :param filter_vars: Dictionary that contains the requirements variables with their respective
+    information.
+    :return: Dataframe with the new variables created.
     """
+    # Defining a dictionary that contains the comparison operators
     operators = {
         "=": operator.eq,
         "<=": operator.le,
@@ -77,45 +79,33 @@ def meets_requirements(df, filter_vars: dict):
         ">": operator.gt,
         "!=": operator.ne
     }
+    # Storing the requirements keys in a list
     requirements = ["Minutos_min", "Asistencias_min"]
-
+    # Iterating over the requirements list to apply the corresponding comparison operations
+    # and write the corresponding value in the new variable.
     for r in requirements:
         name = filter_vars[r]["name"]
         value = filter_vars[r]["value"]
         operation = operators[filter_vars[r]["operation"]]
         df["Cumple_" + r.strip("_min")] = df[name].apply(lambda x: 1 if operation(x, value) else 0)
-
+    # Defining the Cumple_Ambos variables as the sum of the Cumple_Minutos and Cumple_Asistencias
+    # column
     df["Cumple_Ambos"] = (df["Cumple_Minutos"] + df["Cumple_Asistencias"])//2
-
+    # Changing the 1 by "Sí" and 0 by "No" in the new columns
     df["Cumple_Ambos"] = df["Cumple_Ambos"].apply(lambda x: "Sí" if x == 1 else "No")
     df["Cumple_Minutos"] = df["Cumple_Minutos"].apply(lambda x: "Sí" if x == 1 else "No")
     df["Cumple_Asistencias"] = df["Cumple_Asistencias"].apply(lambda x: "Sí" if x == 1 else "No")
 
     return df
 
-# def count_uniques(df, variables: list):
-#     """
-#     This function counts the occurrence of unique values in a dataframe column, and orders the result un descending
-#     order.
-#     :param df: Dataframe from which the data will be collected.
-#     :param variables: Dataframe columns to count the values from.
-#     :return: A dataframe with the count of the unique values from the selected column.
-#     """
-#     # Filtering variables
-#
-#     filtered_variables = [v for v in variables if v != ""]
-#
-#     aggregated_df = df.groupby(by=filtered_variables)[[filtered_variables[0]]].aggregate("count")
-#     sorted_df = aggregated_df.rename(columns={f"{filtered_variables[0]}": "Conteo"})
-#
-#     return sorted_df.reset_index()
-
 
 def delete_redundancies(x, column: str):
     """
-    :param x:
-    :param column:
-    :return:
+    This function takes care of the redundancies found in the Entidad and Sexo columns.
+    It is used as an argument to the dataframe apply() method.
+    :param x: Dataframe element to change.
+    :param column: Column from which the redundancies will be eliminated.
+    :return: Dataframe column with redundancies deleted.
     """
     if column == "Entidad":
         if x == "Ciudad De México":
@@ -137,29 +127,13 @@ def delete_redundancies(x, column: str):
         return x
 
 
-def aggregate_data(df, variables_to_group: list, variable_to_aggregate: str, operation: str = "sum"):
-    """
-
-    :param df:
-    :param variables_to_group:
-    :param variable_to_aggregate:
-    :param operation:
-    :return:
-    """
-
-    aggregated_df = df.groupby(variables_to_group)[[variable_to_aggregate]].aggregate(operation)
-    sorted_df = aggregated_df.rename(columns={f"{variable_to_aggregate}": "Conteo"})
-
-    return sorted_df.reset_index()
-
-
 def count_values(df, group_by: str, col: str):
     """
-    This function does something
-    :param df:
-    :param group_by:
-    :param col:
-    :return:
+    This function counts the number of occurrences of unique values in a dataframe column.
+    :param df: Dataframe from which the occurrences will be counted.
+    :param group_by: Column to group the dataframe by.
+    :param col: Dataframe column from which the occurrences will be counted.
+    :return: Dataframe containing the number of occurrences of elements in the chosen column.
     """
 
     new_df = df.groupby(by=group_by)[col].value_counts().reset_index()
