@@ -250,7 +250,8 @@ def launch_dashboard():
             if j == 0:
                 tile = rows[f"{i}"][j].container()
                 tile.plotly_chart(create_area_chart(dataframes[key],
-                                                    "Conteo", key, ""))
+                                                    "Conteo", key,
+                                                    "Número de participantes"))
             else:
                 tile = rows[f"{i}"][j].container()
                 tile.title("")
