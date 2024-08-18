@@ -230,48 +230,30 @@ def launch_dashboard():
     cumple_minutos = count_values(requirements_df, "Fecha", "Cumple_Minutos")
     cumple_asistencias = count_values(requirements_df, "Fecha", "Cumple_Asistencias")
 
+    dataframes = {
+        "Cumple_Ambos": cumple_ambos,
+        "Cumple_Minutos": cumple_minutos,
+        "Cumple_Asistencias": cumple_asistencias
+    }
+
     # Dividing the layout in two columns
-    col1, col2 = st.columns([2/3, 1/3])
-    with col1:
-        title = ""
-# ----------------------------------------------------------------------------------------------------------------------
-        # title_asistencias = ""
-        # title_minutos = ""
-        # if selections["Minutos"]["flag"]:
-        #     title_minutos = ", minutos " + selections["Minutos"]["operation"] \
-        #                         + " " + str(selections["Minutos"]["value"])
-        # if selections["Asistencias"]["flag"]:
-        #     title_asistencias = ", asistencias " + selections["Asistencias"]["operation"] \
-        #                         + " " + str(selections["Asistencias"]["value"])
-        # if selections["Entidad"]["flag"]:
-        #     selected_ent = selections["Entidad"]["value"]
-        #     title = f"Gráfica de área en {selected_ent}" + title_asistencias + title_minutos
-        # else:
-        #     title = "Gráfica de área general" + title_asistencias + title_minutos
-# ----------------------------------------------------------------------------------------------------------------------
-        # Creating area chart
+    # col1, col2 = st.columns([2/3, 1/3])
 
-        st.plotly_chart(create_area_chart(cumple_ambos,
-                                          "Conteo", "Cumple_Ambos", title))
+    nrows = 3
+    ncols = 2
+    rows = {}
 
-        st.plotly_chart(create_area_chart(cumple_minutos,
-                                          "Conteo", "Cumple_Minutos", title))
-
-        st.plotly_chart(create_area_chart(cumple_asistencias,
-                                          "Conteo", "Cumple_Asistencias", title))
-    with col2:
-        # This empty st.title helps to move the dataframe where I want. I don't know any form of doing this in
-        # a better way
-        st.title("")
-        st.write("")
-        # Printing the dataframe used to create the area chart
-        st.dataframe(cumple_ambos.sort_values(by="Fecha"), use_container_width=True)
-
-        st.title("")
-        st.title("")
-        st.dataframe(cumple_minutos, use_container_width=True)
-
-        st.title("")
-        st.title("")
-        st.dataframe(cumple_asistencias, use_container_width=True)
+    for i in range(nrows):
+        key = list(dataframes.keys())[i]
+        rows[f"{i}"] = st.columns([2/3, 1/3])
+        for j in range(ncols):
+            if j == 0:
+                tile = rows[f"{i}"][j].container()
+                tile.plotly_chart(create_area_chart(dataframes[key],
+                                                    "Conteo", key, ""))
+            else:
+                tile = rows[f"{i}"][j].container()
+                tile.title("")
+                tile.write("")
+                tile.dataframe(dataframes[key], use_container_width=True)
 
