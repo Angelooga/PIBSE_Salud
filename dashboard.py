@@ -263,7 +263,7 @@ def launch_dashboard():
         # This empty st.title helps to move the dataframe where I want. I don't know any form of doing this in
         # a better way
         st.title("")
-        st.title("")
+        st.write("")
         # Printing the dataframe used to create the area chart
         st.dataframe(cumple_ambos.sort_values(by="Fecha"), use_container_width=True)
 
