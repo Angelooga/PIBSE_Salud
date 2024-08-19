@@ -136,7 +136,7 @@ def count_values(df, group_by: str, col: str):
     :return: Dataframe containing the number of occurrences of elements in the chosen column.
     """
 
-    new_df = df.groupby(by=group_by)[col].value_counts().reset_index()
+    new_df = df.groupby(by=group_by)[col].value_counts()
 
     return new_df.rename(columns={"count": "Participantes"})
 
