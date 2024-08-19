@@ -203,18 +203,16 @@ def launch_dashboard():
     # Filtering the data if necessary
     filtered_df = filter_data(df, selections)
     # Creating requirement variables
-    requirements_df = meets_requirements(filtered_df, selections)
-    
-    # Defining the dataframes that include the requirements counting
-    cumple_ambos = count_values(requirements_df, "Fecha", "Cumple_Ambos")
-    cumple_minutos = count_values(requirements_df, "Fecha", "Cumple_Minutos")
-    cumple_asistencias = count_values(requirements_df, "Fecha", "Cumple_Asistencias")
+    requirements_df = meets_requirements(filtered_df, selections) 
 
     # This dictionary stores the dataframes created
     dataframes = {
-        "Cumple_Ambos": cumple_ambos,
-        "Cumple_Minutos": cumple_minutos,
-        "Cumple_Asistencias": cumple_asistencias
+        "Cumple_Ambos": count_values(requirements_df, 
+                                     "Fecha", "Cumple_Ambos"),
+        "Cumple_Minutos": count_values(requirements_df, 
+                                       "Fecha", "Cumple_Minutos"),
+        "Cumple_Asistencias": count_values(requirements_df, 
+                                           "Fecha", "Cumple_Asistencias")
     }
 
     # Creating a grid where the charts and tables will be included
@@ -228,7 +226,7 @@ def launch_dashboard():
         key = list(dataframes.keys())[i]
         rows[f"{i}"] = st.columns([2/3, 1/3])
         for j in range(ncols):
-            # If j index is equal to 0, insert a craph
+            # If j index is equal to 0, insert a graph
             if j == 0:
                 tile = rows[f"{i}"][j].container()
                 tile.plotly_chart(create_area_chart(dataframes[key],
