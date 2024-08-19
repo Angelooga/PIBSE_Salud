@@ -137,7 +137,7 @@ def count_values(df, group_by: str, col: str):
     """
 
     new_df = df.groupby(by=group_by)[col].value_counts().reset_index()
-    new_df["%"] = round(100 * new_df['count']/new_df.groupby('Fecha')["count"]\
+    new_df["Porcentaje"] = round(100 * new_df['count']/new_df.groupby('Fecha')["count"]\
                                                     .transform('sum'), 1)
 
     return new_df.rename(columns={"count": "Participantes"})
