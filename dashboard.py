@@ -232,7 +232,7 @@ def launch_dashboard():
             if j == 0:
                 tile = rows[f"{i}"][j].container()
                 tile.plotly_chart(create_area_chart(dataframes[key],
-                                                    "Conteo", key,
+                                                    "Participantes", key,
                                                     "Número de participantes"))
             # If the j index is equal to 1, write a table
             else:
