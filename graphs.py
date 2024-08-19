@@ -14,10 +14,10 @@ def format_graphs_titles(key: str):
     str_to_attach = ""
 
     if key == "Cumple_Ambos":
-        str_to_attach = " que cumplen ambos requerimientos"
+        str_to_attach = " que cumplen ambos requisitos"
     else:
         requirement = key.strip("Cumple_").lower()
-        str_to_attach = f" que cumplen los requerimientos de {requirement}"
+        str_to_attach = f" que cumplen los requisitos de {requirement}"
         
     return str_to_attach
 
