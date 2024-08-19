@@ -83,7 +83,7 @@ def set_filter_variables():
         "Asistencias_min": {
             "name": "total_asist",
             "value": 0,
-            "flag": False,
+            "flag": True,
             "operation": ">="
         },
         "parameter": {
