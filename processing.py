@@ -2,6 +2,8 @@ import pandas as pd
 import operator
 from datetime import datetime
 
+pd.set_option('display.float_format', '{:.1f}'.format)
+
 def read_data(index_col: str = None, dtype=None):
     """
     This function reads a csv file and returns a pandas dataframe.
@@ -135,7 +137,6 @@ def count_values(df, group_by: str, col: str):
     :param col: Dataframe column from which the occurrences will be counted.
     :return: Dataframe containing the number of occurrences of elements in the chosen column.
     """
-    pd.set_option('display.float_format', '{:.1f}'.format)
     
     new_df = df.groupby(by=group_by)[col].value_counts().reset_index()
     new_df["Porcentaje"] = round(100 * new_df['count']/new_df.groupby('Fecha')["count"]\
