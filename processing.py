@@ -138,5 +138,5 @@ def count_values(df, group_by: str, col: str):
 
     new_df = df.groupby(by=group_by)[col].value_counts().reset_index()
 
-    return new_df.rename(columns={"count": "Conteo"})
+    return new_df.rename(columns={"count": "Participantes"})
 
