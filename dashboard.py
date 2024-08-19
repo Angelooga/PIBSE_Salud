@@ -239,5 +239,6 @@ def launch_dashboard():
                 tile = rows[f"{i}"][j].container()
                 tile.title("")
                 tile.write("")
-                tile.write(dataframes[key], use_container_width=True)
+                tile.write(dataframes[key].set_index("Fecha"), 
+                           use_container_width=True)
 
