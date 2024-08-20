@@ -164,7 +164,7 @@ def set_sidebar(df):
                     # Appending the value of the corresponding filter
                     filter_vars[q_filter]["value"] = value
 
-        st.write("Requerimientos Mínimos")
+        st.write("Requisitos Mínimos")
         # Creating two columns for the minimum requirements
         col1, col2 = st.columns([1/2, 1/2])
 
