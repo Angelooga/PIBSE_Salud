@@ -11,20 +11,27 @@ def read_data(index_col: str = None, dtype=None):
     :param dtype: Datatype or dictionary of datatypes in the dataframe.
     :return: A pandas dataframe containing the data
     """
-    path = r"PIBSE 2024 Histórico (6 semanas).csv"
+    data = {}
+    path_2024 = r"PIBSE 2024 Histórico (6 semanas).csv"
+    # paht_2023 = r""
     # Reading the csv file
-    df = pd.read_csv(path, index_col=index_col, dtype=dtype)
-    # df["Fecha"] = pd.to_datetime(df["Fecha"])
+    df_2024 = pd.read_csv(path, index_col=index_col, dtype=dtype)
+    
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
-    df = df[df["Entidad"].isin(states_to_keep)]
+    df_2024 = df_2024[df_2024["Entidad"].isin(states_to_keep)]
+    #df_2023 = df_2034[df_2023["Entidad"].isin(states_to_keep)]
     # Deleting the redundancies from the Sexo column
-    df["Sexo"] = df["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
+    df_2024["Sexo"] = df_2024["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
+    df_2023["Sexo"] = df_2023["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     # Deleting "unnecessary" columns.
     cols_to_delete = ["Puesto", "total_encuestas"]
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
-    return df[cols_to_keep]
+    data["2024"] = df_2024[cols_to_keep]
+    # data["2023"] = df_2023[cols_to_keep]
+    
+    return data
 
 
 def filter_data(df, filter_vars: dict):
