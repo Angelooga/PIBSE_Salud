@@ -26,7 +26,7 @@ def read_data(index_col: str = None, dtype=None):
     df_2023["Sexo"] = df_2023["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     # Deleting "unnecessary" columns.
     cols_to_delete = ["Puesto", "total_encuestas"]
-    cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
+    cols_to_keep = [col for col in df_2024.columns if col not in cols_to_delete]
 
     data["2024"] = df_2024[cols_to_keep]
     data["2023"] = df_2023[cols_to_keep]
