@@ -13,7 +13,7 @@ def read_data(index_col: str = None, dtype=None):
     """
     data = {}
     path_2024 = r"PIBSE 2024 Histórico (6 semanas).csv"
-    paht_2023 = r"PIBSE 2024 Histórico (6 semanas).csv"
+    path_2023 = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
     df_2024 = pd.read_csv(path_2024, index_col=index_col, dtype=dtype)
     df_2023 = pd.read_csv(path_2023, index_col=index_col, dtype=dtype)
