@@ -189,7 +189,7 @@ def set_sidebar():
                 # Appending the operation of the corresponding filter
                 filter_vars[var + "_min"]["value"] = value
 
-    return filter_vars
+    return filter_vars, df
 
 
 def launch_dashboard():
@@ -200,9 +200,9 @@ def launch_dashboard():
     st.set_page_config(layout="wide")
     set_title("PIBSE Salud")
     # Reading the data
-    data = read_data()
+    # data = read_data()
     # Retrieving the selections chosen from the sidebar
-    selections = set_sidebar()
+    selections, df = set_sidebar()
     # Filtering the data if necessary
     filtered_df = filter_data(df, selections)
     # Creating requirement variables
