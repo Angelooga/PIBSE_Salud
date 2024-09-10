@@ -174,7 +174,7 @@ def set_sidebar():
         for var in variables[1:]:
             # The first column deploys a dropdown menu to select the comparison operator
             with col1:
-                operation = set_dd_menu([">", ">="],
+                operation = set_dd_menu([">", ">=", "="],
                                         title=f"{var}:", index=0)
                 # Appending the operation of the corresponding filter
                 filter_vars[var + "_min"]["operation"] = operation
