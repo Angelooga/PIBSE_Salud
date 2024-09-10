@@ -13,14 +13,14 @@ def read_data(index_col: str = None, dtype=None):
     """
     data = {}
     path_2024 = r"PIBSE 2024 Histórico (6 semanas).csv"
-    # paht_2023 = r""
+    paht_2023 = r"PIBSE 2024 Histórico (6 semanas).csv"
     # Reading the csv file
-    df_2024 = pd.read_csv(path, index_col=index_col, dtype=dtype)
-    
+    df_2024 = pd.read_csv(path_2024, index_col=index_col, dtype=dtype)
+    df_2023 = pd.read_csv(path_2023, index_col=index_col, dtype=dtype)
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df_2024 = df_2024[df_2024["Entidad"].isin(states_to_keep)]
-    #df_2023 = df_2034[df_2023["Entidad"].isin(states_to_keep)]
+    df_2023 = df_2034[df_2023["Entidad"].isin(states_to_keep)]
     # Deleting the redundancies from the Sexo column
     df_2024["Sexo"] = df_2024["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     df_2023["Sexo"] = df_2023["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
@@ -29,7 +29,7 @@ def read_data(index_col: str = None, dtype=None):
     cols_to_keep = [col for col in df.columns if col not in cols_to_delete]
 
     data["2024"] = df_2024[cols_to_keep]
-    # data["2023"] = df_2023[cols_to_keep]
+    data["2023"] = df_2023[cols_to_keep]
     
     return data
 
