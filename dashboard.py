@@ -103,7 +103,7 @@ def set_filter_variables():
     return filter_vars
 
 
-def set_sidebar(df):
+def set_sidebar():
     """
     This function takes charge of the sidebar configurations. It contains the checkboxes corresponding to the
     available filters, as well as drop down menus and input boxes to set the values and operations to filter by.
@@ -128,6 +128,9 @@ def set_sidebar(df):
         # Available comparison operators
         operations = ["=", "<=", "<", ">=", ">", "!="]
 
+        st.radio(label="Default", options=["2023", "2024"], index = 0,
+                 label_visibility="hidden")
+        df = read_data()[year]
         # Setting the header of the filters section in the sidebar
         st.write("Filtros generales:")
         # Obtaining the filter variables.
@@ -197,9 +200,9 @@ def launch_dashboard():
     st.set_page_config(layout="wide")
     set_title("PIBSE Salud")
     # Reading the data
-    df = read_data()
+    data = read_data()
     # Retrieving the selections chosen from the sidebar
-    selections = set_sidebar(df)
+    selections = set_sidebar()
     # Filtering the data if necessary
     filtered_df = filter_data(df, selections)
     # Creating requirement variables
