@@ -31,7 +31,7 @@ def read_data(index_col: str = None, dtype=None):
     # data["2024"] = df_2024[cols_to_keep]
     # data["2023"] = df_2023[cols_to_keep]
     df_2023["Fecha"] = pd.to_datetime(df_2023["Fecha"]).dt.date
-    data["2024"] = df_2023
+    data["2024"] = df_2024
     data["2023"] = df_2023
     
     return data
