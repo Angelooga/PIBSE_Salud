@@ -129,7 +129,7 @@ def set_sidebar():
         operations = ["=", "<=", "<", ">=", ">", "!="]
         st.write("Seleccione el año")
         year = st.radio(label="Default", options=["2023", "2024"], index = 0,
-                        label_visibility="hidden")
+                        label_visibility="collapsed")
         df = read_data()[year]
         # Setting the header of the filters section in the sidebar
         st.write("Filtros generales:")
