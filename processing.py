@@ -20,7 +20,7 @@ def read_data(index_col: str = None, dtype=None):
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df_2024 = df_2024[df_2024["Entidad"].isin(states_to_keep)]
-    df_2023 = df_2034[df_2023["Entidad"].isin(states_to_keep)]
+    df_2023 = df_2023[df_2023["Entidad"].isin(states_to_keep)]
     # Deleting the redundancies from the Sexo column
     df_2024["Sexo"] = df_2024["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
     df_2023["Sexo"] = df_2023["Sexo"].apply(lambda x: delete_redundancies(x, "Sexo"))
