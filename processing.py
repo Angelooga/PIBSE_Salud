@@ -15,20 +15,25 @@ def read_data(index_col: str = None, dtype=None):
     
     path_2024 = r"PIBSE 2024 Histórico (6 semanas).csv"
     path_2023 = r"Históricos PIBSE Salud.csv"
+    path_2022 = r"Históricos PIBSE Salud.csv"
     
     # Reading the csv file
     df_2024 = pd.read_csv(path_2024, index_col=index_col, dtype=dtype)
     df_2023 = pd.read_csv(path_2023, index_col=index_col, dtype=dtype)
+    df_2022 = pd.read_csv(path_2022, index_col=index_col, dtype=dtype)
     
     # Keeping the top six states with the highest number of participants
     states_to_keep = ["Sonora", "Oaxaca", "Querétaro", "Nuevo León", "Campeche", "Coahuila"]
     df_2024 = df_2024[df_2024["Entidad"].isin(states_to_keep)]
     df_2023 = df_2023[df_2023["Entidad"].isin(states_to_keep)] 
+    df_2022 = df_2022[df_2022["Entidad"].isin(states_to_keep)] 
     
     df_2023["Fecha"] = pd.to_datetime(df_2023["Fecha"]).dt.date
+    df_2022["Fecha"] = pd.to_datetime(df_2022["Fecha"]).dt.date
     
     data["2024"] = df_2024
     data["2023"] = df_2023
+    data["2022"] = df_2022
     
     return data
 
